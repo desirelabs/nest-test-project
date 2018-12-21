@@ -6,20 +6,25 @@ import {
   Put,
   Param,
   Delete,
-  Query,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateUserDto } from './create-user.dto';
+import { UsersService } from './users.service';
+import { User } from './interfaces/user.interface';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(@Body() createUserDto: CreateUserDto) {
+    this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll(@Query() query) {
-    return `This action returns all users (limit: ${query.limit} items)`;
+  async findAll(): Promise<User[]> {
+    return this.usersService.findAll();
   }
 
   @Get(':id')
